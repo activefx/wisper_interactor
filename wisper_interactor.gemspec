@@ -25,7 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard-rspec"
   spec.add_development_dependency "wisper-rspec"
 
-  spec.add_dependency "git-version-bump"
   spec.add_dependency "wisper", "~> 1.0", "< 2"
   spec.add_dependency "interactor", "~> 3.0", "< 4"
 end
