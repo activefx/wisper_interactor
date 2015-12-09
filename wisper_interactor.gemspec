@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Matt Solt"]
   spec.email         = ["mattsolt@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
+  spec.summary       = %q{Extend Interactor (https://github.com/collectiveidea/interactor) with PubSub capabilities using Wisper (https://github.com/krisleech/wisper).}
+  spec.description   = %q{Extend Interactor (https://github.com/collectiveidea/interactor) with PubSub capabilities using Wisper (https://github.com/krisleech/wisper).}
   spec.homepage      = "https://github.com/activefx/wisper_interactor"
   spec.license       = "MIT"
 
