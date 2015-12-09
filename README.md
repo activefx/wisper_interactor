@@ -1,10 +1,10 @@
 # WisperInteractor
 
 [![Gem Version](https://img.shields.io/gem/v/wisper_interactor.svg?style=flat)](https://rubygems.org/gems/wisper_interactor)
-[![Build Status](https://secure.travis-ci.org/activefx/wisper_interactor.png)](http://travis-ci.org/activefx/wisper_interactor)
-[![Code Climate](https://codeclimate.com/github/activefx/wisper_interactor/badges/gpa.svg)](https://codeclimate.com/github/activefx/wisper_interactor)
-[![Dependency Status](https://gemnasium.com/activefx/wisper_interactor.png)](https://gemnasium.com/activefx/wisper_interactor)
-[![Test Coverage](https://codeclimate.com/github/activefx/wisper_interactor/badges/coverage.svg)](https://codeclimate.com/github/activefx/wisper_interactor/coverage)
+[![Build Status](https://img.shields.io/travis/activefx/wisper_interactor.svg?style=flat)](http://travis-ci.org/activefx/wisper_interactor)
+[![Code Climate](https://img.shields.io/codeclimate/github/activefx/wisper_interactor.svg?style=flat)](https://codeclimate.com/github/activefx/wisper_interactor)
+[![Test Coverage](https://img.shields.io/codeclimate/coverage/github/activefx/wisper_interactor.svg?style=flat)](https://codeclimate.com/github/activefx/wisper_interactor/coverage)
+[![Dependency Status](https://gemnasium.com/activefx/wisper_interactor.svg)](https://gemnasium.com/activefx/wisper_interactor)
 
 WisperInteractor extends [Interactor](https://github.com/collectiveidea/interactor) with PubSub capabilities using [Wisper](https://github.com/krisleech/wisper). Instead of including the Interactor module, your interactor classes should inherit from WisperInteractor::Base. All Interactor methods are available such as the before, after, and around hooks, the rollback method, and the interactor class is still intialized or called with the context options. 
 
