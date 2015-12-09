@@ -1,3 +1,5 @@
+require 'git-version-bump'
+
 module WisperInteractor
-  VERSION = "0.1.0"
+  VERSION = GVB.version
 end
