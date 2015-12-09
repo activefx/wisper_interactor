@@ -6,9 +6,9 @@
 [![Dependency Status](https://gemnasium.com/activefx/wisper_interactor.png)](https://gemnasium.com/activefx/wisper_interactor)
 [![Test Coverage](https://codeclimate.com/github/activefx/wisper_interactor/badges/coverage.svg)](https://codeclimate.com/github/activefx/wisper_interactor)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/wisper_interactor`. To experiment with that code, run `bin/console` for an interactive prompt.
+WisperInteractor extends [Interactor](https://github.com/collectiveidea/interactor) with PubSub capabilities using [Wisper](https://github.com/krisleech/wisper). Instead of including the Interactor module, your interactor classes should inherit from WisperInteractor::Base. All Interactor methods are available such as the before, after, and around hooks, the rollback method, and the interactor class is still intialized or called with the context options. 
 
-TODO: Delete this and the text above, and describe your gem
+As an interactor is designed to encapsulate your application's business logic and keep it out of your controllers, it makes sense to combine that functionality with Wisper's PubSub capabilities, further decoupling business logic from application code and external concerns. 
 
 ## Installation
 
@@ -29,58 +29,78 @@ Or install it yourself as:
 ## Usage
 
 ````ruby 
-class SampleInteractor
+class NewsletterSignup < WisperInteractor::Base 
 
-  around do |interactor|
-    # ...
-    interactor.call
-    # ...
-  end
+  # Subscribe a class that listens to Wisper events. For example, 
+  # if your NewletterSignup interactor is going to publish a 
+  # :signup_successful event, your AddMailchimpSubscriber listener
+  # should have a #signup_successful and possibly also a #signup_failed
+  # method to handle to the corresponding events. See the Wisper 
+  # documentation for futher information.  
+  # 
+  # .subscribe can be called multiple times in a WisperInteractor, and
+  # can also accept options that are passed to the Wisper publisher. 
+  # 
+  subscribe AddMailchimpSubscriber
+  subscribe NewsletterAnalyticsService, async: true
 
-  before do
-    # ...
-  end
-
-  after do
-    # ...
-  end
-
-  subscribe SampleInteractorListener, async: true
-
-  # Runs after all other hooks when the interactor executes successfully
+  # Runs after all other Interactor hooks when the interactor executes 
+  # successfully. It is recommended that you broadcast a success 
+  # message here that Wisper listeners can subscribe to in the future.
+  # 
   on_success do
-    broadcast(:sample_interactor_succeeded, *args)
+    broadcast(:newsletter_signup_succeeded, context.params)
   end
 
-  # Runs in the event of any failure of the interactor
+  # Runs in the event of any failure of the interactor. Keep in mind that
+  # the interactor before hook, as well as the first portion of an 
+  # around hook will have run in the event of a failure. It is recommended
+  # that you broadcast a failure message here that Wisper listeners can 
+  # subscribe to in the future.
+  # 
   on_failure do
-    broadcast(:sample_interactor_failed, *args)
+    broadcast(:newsletter_signup_failer, context.params)
   end
 
+  # This is where you should place the core business logic of your 
+  # interactor. This is evaulated in the context of the instance, 
+  # and will have access to any instance methods you have defined 
+  # as well as the interactor context method. You should use this
+  # for your logic instead of #call as specified in the Interactor
+  # documentation. 
+  # 
+  # If this block executes successfully, the on_success callback is
+  # called, and if it fails or raises an error, the on_failure 
+  # callback is executed. 
+  # 
   perform do
-    if form.validate(context)
+    if form.validate(context.params)
       form.save
     else
       context.fail!(message: "Failed to create model.")
     end
   end
 
+  # Example instance method
+  # 
   def form
-    context.form ||= Form.new(Model.new)
+    context.form ||= NewsletterSignupForm.new
   end
 
+  # As interactors can be chained together using an Interactor::Organizer, 
+  # you may for example want to include logic to unsubscribe a user from 
+  # your newsletter should a future interactor fail. This is of course 
+  # completely optional. 
+  # 
   def rollback
-    # action to undo if interactor is successful, but needs to
-    # be rolled back later, such as when using an Interactor::Organizer
+    # logic for undoing interactor action 
   end
 end
 
-SampleInteractor.call(**context)
+# Example execution of the NewsletterSignup interactor
+# 
+SampleInteractor.call(params: { email: 'info@example.com'})
 ````
-
-## DSL 
-
-TODO
 
 ## Development
 
