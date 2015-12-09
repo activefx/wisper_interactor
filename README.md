@@ -59,7 +59,7 @@ class NewsletterSignup < WisperInteractor::Base
   # subscribe to in the future.
   # 
   on_failure do
-    broadcast(:newsletter_signup_failer, context.params)
+    broadcast(:newsletter_signup_failed, context.params)
   end
 
   # This is where you should place the core business logic of your 
@@ -99,7 +99,7 @@ end
 
 # Example execution of the NewsletterSignup interactor
 # 
-SampleInteractor.call(params: { email: 'info@example.com'})
+NewsletterSignup.call(params: { email: 'info@example.com'})
 ````
 
 ## Development
